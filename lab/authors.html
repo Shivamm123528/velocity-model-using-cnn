@@ -17,8 +17,32 @@ dl{margin:0}dt{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;colo
 @keyframes arrive{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}@keyframes popup{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes fade{from{opacity:0}to{opacity:1}}
 @media(max-width:560px){body{padding:12px 8px}.grid{grid-template-columns:1fr;gap:18px}.photo{height:230px}.info{padding:20px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* Full-width photographic author profiles. */
+body{padding:12px;background:#fcfaf7}
+.grid{width:100%;max-width:none;gap:24px;min-height:calc(100vh - 32px)}
+.card{position:relative;min-height:740px;border:0;border-radius:24px;background:#24343d;isolation:isolate}
+.photo{position:absolute;inset:0;height:100%;background:linear-gradient(145deg,#536c70,#322c35)}
+.photo img{object-position:center 20%}
+.photo>.initials{font-size:clamp(100px,12vw,200px);color:#e8d8cc;align-self:start;margin-top:160px}
+.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,#101d2b55 55%,#101d2bf5 100%)}
+.badge{top:26px;bottom:auto;left:26px;z-index:1;background:#ffffffde}
+.info{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:clamp(26px,4vw,56px);color:#fff}
+.info h2{font-size:clamp(28px,3.4vw,54px);line-height:1.05;max-width:520px;margin-bottom:16px}
+.info p{color:#e2e6e8;font-size:16px;line-height:1.5}.action{color:#f6c8b5;font-size:16px;margin-top:32px}
+dialog{position:fixed;inset:12px;margin:auto;width:calc(100% - 24px);max-width:none;height:calc(100% - 24px);max-height:none;padding:0;border:0;border-radius:24px;background:#263840;color:#fff;overflow:auto;isolation:isolate}
+.avatar{position:absolute;inset:0;width:100%;height:100%;min-height:740px;border-radius:0;margin:0;background:linear-gradient(135deg,#263e46,#70534b);z-index:-2}
+.avatar img{object-position:center 20%;width:100%;height:100%;object-fit:cover}
+.avatar .initials{font-size:clamp(160px,30vw,400px);letter-spacing:-12px;color:#ffffff30;justify-self:end;margin-right:8%}
+dialog::after{content:"";position:absolute;inset:0;min-height:740px;background:linear-gradient(90deg,#101c2bf2 0%,#101c2bc9 37%,#101c2b30 75%);z-index:-1}
+.profile-copy{position:relative;padding:clamp(32px,6vw,88px);max-width:680px;min-height:100%;display:flex;flex-direction:column;justify-content:center}
+dialog h2{font-size:clamp(36px,5vw,76px);line-height:1.03;margin:0 0 20px;letter-spacing:-2px;text-shadow:0 2px 18px #0006}
+.tag{align-self:flex-start;color:#ffe1d3;background:#ffffff1c;border:1px solid #ffffff35;margin-bottom:20px}
+dt{color:#eac2af;font-size:12px;margin-top:22px}dd{font-size:clamp(17px,1.6vw,22px);color:#fff}
+a{color:#fff;text-decoration:underline;text-underline-offset:5px}.close{position:fixed;right:30px;top:30px;width:48px;height:48px;font-size:30px;z-index:5;color:#fff;background:#162635aa;border:1px solid #ffffff55;backdrop-filter:blur(10px)}
+@media(max-width:640px){.grid{grid-template-columns:1fr;gap:18px}.card{min-height:510px}.photo{height:100%}.info{padding:28px}.info h2{font-size:36px}.profile-copy{padding:90px 26px 40px;max-width:100%;justify-content:flex-end;min-height:100%}dialog h2{font-size:42px}dialog::after{background:linear-gradient(180deg,#101c2b05 0%,#101c2b77 30%,#101c2bf0 58%)}.avatar img{object-position:center top}.close{right:24px;top:24px}dd{font-size:18px}}
 </style></head><body><main class="grid" id="cards" aria-label="Project authors"></main>
-<dialog id="details" aria-labelledby="author-name"><button class="close" aria-label="Close author details">&times;</button><div class="avatar" id="avatar"></div><h2 id="author-name"></h2><p class="tag">Project author</p><dl><dt>Roll number</dt><dd id="roll"></dd><dt>Department</dt><dd>Department of Earth Sciences</dd><dt>Institution</dt><dd>IIT Bombay</dd><div id="email-block"><dt>Email</dt><dd><a id="email"></a></dd></div></dl></dialog>
+<dialog id="details" aria-labelledby="author-name"><button class="close" aria-label="Close author details">&times;</button><div class="avatar" id="avatar"></div><div class="profile-copy"><h2 id="author-name"></h2><p class="tag">Project author</p><dl><dt>Roll number</dt><dd id="roll"></dd><dt>Department</dt><dd>Department of Earth Sciences</dd><dt>Institution</dt><dd>IIT Bombay</dd><div id="email-block"><dt>Email</dt><dd><a id="email"></a></dd></div></dl></div></dialog>
 <script>
 const authors=__AUTHORS_JSON__;
 const grid=document.getElementById('cards'), dialog=document.getElementById('details');
