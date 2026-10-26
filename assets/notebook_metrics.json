@@ -1,0 +1,37 @@
+{
+  "source": "Uploaded notebook demo CPU run; historical results, not current app performance",
+  "conditions": [
+    {
+      "condition": "Clean",
+      "MSE": 140937,
+      "PSNR": 18.33,
+      "SSIM": 0.724
+    },
+    {
+      "condition": "5% noise",
+      "MSE": 162083,
+      "PSNR": 17.87,
+      "SSIM": 0.701
+    },
+    {
+      "condition": "Amplitude x2",
+      "MSE": 202359,
+      "PSNR": 16.91,
+      "SSIM": 0.636
+    },
+    {
+      "condition": "Lowest 10% FFT bins removed",
+      "MSE": 143264,
+      "PSNR": 18.33,
+      "SSIM": 0.721
+    }
+  ],
+  "fwi": {
+    "network_mse": 156660,
+    "fwi_mse": 25176,
+    "inference_s": 0.073,
+    "fwi_s": 461,
+    "training_min": 7.2,
+    "models": 1
+  }
+}
