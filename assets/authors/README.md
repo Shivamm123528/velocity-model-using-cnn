@@ -1,0 +1,1 @@
+Put Shivam's photo here as shivam.jpg and Ankit's photo as ankit.jpg. JPEG (.jpeg) and PNG (.png) also work with the same lowercase names. Use portrait or square photographs, ideally at least 600 pixels wide, under 2 MB each. Convert the actual format rather than only renaming an extension. Until photos are supplied, the cards show initials.
