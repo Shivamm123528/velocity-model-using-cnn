@@ -27,5 +27,5 @@ def render(root):
     import streamlit.components.v1 as components
     st.markdown("<style>.block-container{max-width:none!important;padding-left:1.5rem;padding-right:1.5rem}</style>",unsafe_allow_html=True)
     st.title("Authors")
-    st.caption("Meet the people behind Seismic Velocity Modelling Lab. Select a photo to view their details.")
+    st.caption("Meet the people behind Seismic Velocity Modelling. Select a photo to view their details.")
     components.html(build_html(root),height=900,scrolling=True)
