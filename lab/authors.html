@@ -52,7 +52,7 @@ dialog .profile-copy{min-height:0;height:100%;max-width:none;padding:72px clamp(
 dialog h2{font-size:clamp(30px,3.5vw,56px);overflow-wrap:anywhere}
 @media(max-width:700px){dialog[open]{grid-template-columns:minmax(0,1fr);grid-template-rows:55vh auto;overflow-y:auto}dialog .avatar{height:55vh;min-height:0}dialog .profile-copy{height:auto;overflow:visible;padding:30px 24px 40px}dialog h2{font-size:36px}}
 </style></head><body><main class="grid" id="cards" aria-label="Project authors"></main>
-<dialog id="details" aria-labelledby="author-name"><button class="close" aria-label="Close author details">&times;</button><div class="avatar" id="avatar"></div><div class="profile-copy"><h2 id="author-name"></h2><p class="tag">Project author</p><dl><dt>Roll number</dt><dd id="roll"></dd><dt>Department</dt><dd>Department of Earth Sciences</dd><dt>Institution</dt><dd>IIT Bombay</dd><div id="email-block"><dt>Email</dt><dd><a id="email"></a></dd></div></dl></div></dialog>
+<dialog id="details" aria-labelledby="author-name"><button class="close" aria-label="Close author details">&times;</button><div class="avatar" id="avatar"></div><div class="profile-copy"><h2 id="author-name"></h2><p class="tag">Project author</p><dl><dt>Roll number</dt><dd id="roll"></dd><dt>Department</dt><dd>Department of Earth Sciences</dd><dt>Institution</dt><dd>IIT Bombay</dd><div id="email-block"><dt>Email</dt><dd><a id="email"></a></dd></div><dt>LinkedIn</dt><dd><a id="linkedin" target="_blank" rel="noopener noreferrer">View LinkedIn profile</a></dd><dt>GitHub</dt><dd><a id="github" target="_blank" rel="noopener noreferrer"></a></dd></dl></div></dialog>
 <script>
 const authors=__AUTHORS_JSON__;
 const grid=document.getElementById('cards'), dialog=document.getElementById('details');
@@ -64,7 +64,7 @@ authors.forEach(a=>{
  const info=document.createElement('div');info.className='info';const name=document.createElement('h2');name.textContent=a.name;const dept=document.createElement('p');dept.textContent='Department of Earth Sciences';
  const action=document.createElement('div');action.className='action';action.innerHTML='<span>View profile</span><span class="arrow" aria-hidden="true">↗</span>';
  info.append(name,dept,action);card.append(photo,info);grid.append(card);
- card.addEventListener('click',()=>{document.getElementById('avatar').replaceChildren(portrait(a));document.getElementById('author-name').textContent=a.name;document.getElementById('roll').textContent=a.roll;document.getElementById('email-block').hidden=!a.email;const email=document.getElementById('email');email.textContent=a.email||'';email.href=a.email?'mailto:'+a.email:'';dialog.showModal();});
+ card.addEventListener('click',()=>{document.getElementById('avatar').replaceChildren(portrait(a));document.getElementById('author-name').textContent=a.name;document.getElementById('roll').textContent=a.roll;document.getElementById('email-block').hidden=!a.email;const email=document.getElementById('email');email.textContent=a.email||'';email.href=a.email?'mailto:'+a.email:'';document.getElementById('linkedin').href=a.linkedin;const github=document.getElementById('github');github.href=a.github;github.textContent=a.github.split('/').filter(Boolean).pop();dialog.showModal();});
 });
 document.querySelector('.close').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',e=>{const r=dialog.getBoundingClientRect();if(e.target===dialog&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))dialog.close();});

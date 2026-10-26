@@ -4,8 +4,8 @@ import base64
 import json
 
 AUTHORS = [
-    dict(name="Shivam Tomar", roll="25n0019", email="st717338@gmail.com", initials="ST", stem="shivam"),
-    dict(name="Ankit Singh Yadav", roll="25n0015", email="mrankit955@gmail.com", initials="AY", stem="ankit"),
+    dict(name="Shivam Tomar", roll="25n0019", email="st717338@gmail.com", initials="ST", stem="shivam", linkedin="https://www.linkedin.com/in/shivamtomar923", github="https://github.com/Shivamm123528"),
+    dict(name="Ankit Singh Yadav", roll="25n0015", email="mrankit955@gmail.com", initials="AY", stem="ankit", linkedin="https://www.linkedin.com/in/ankit-singh-b422b8378/", github="https://github.com/Ankit6763"),
 ]
 
 def build_html(root):
