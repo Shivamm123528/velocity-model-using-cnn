@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+*{box-sizing:border-box}body{margin:0;padding:24px 14px 38px;background:#fcfaf7;color:#232e3a;font-family:Arial,sans-serif}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;max-width:900px;margin:auto}
+.card{padding:0;text-align:left;cursor:pointer;border:1px solid #e5dcd5;border-radius:24px;overflow:hidden;background:#fff;color:inherit;box-shadow:0 12px 32px #2330440d;transition:transform .35s,box-shadow .35s,border-color .35s;animation:arrive .6s both}
+.card:nth-child(2){animation-delay:.12s}.photo{height:300px;overflow:hidden;background:linear-gradient(140deg,#f0d4c6,#d4e1df);display:grid;place-items:center;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:center 25%;transition:transform .6s}
+.initials{font-size:84px;letter-spacing:-7px;color:#755448;font-weight:700}.badge{position:absolute;bottom:16px;left:18px;background:#ffffffed;color:#70534b;border-radius:30px;padding:8px 13px;font-size:11px;letter-spacing:1.5px}
+.info{padding:24px}.info h2{margin:0 0 9px;font-size:23px}.info p{margin:0;color:#657178;font-size:14px}.action{margin-top:22px;display:flex;justify-content:space-between;font-size:13px;color:#b8554b}.arrow{transition:transform .3s}
+@media(hover:hover){.card:hover{transform:translateY(-8px);box-shadow:0 24px 48px #23304421;border-color:#d4685d}.card:hover img{transform:scale(1.065)}.card:hover .arrow{transform:translateX(5px)}}
+.card:focus-visible,.close:focus-visible,a:focus-visible{outline:3px solid #b8554b;outline-offset:4px}
+dialog{width:min(460px,calc(100% - 28px));border:1px solid #e9d9d0;border-radius:26px;padding:32px;background:#fffdfb;color:#232e3a;box-shadow:0 32px 90px #19293955;max-height:90vh;overflow:auto}
+dialog[open]{animation:popup .35s cubic-bezier(.2,.8,.2,1)}dialog::backdrop{background:#1e2c3d88;backdrop-filter:blur(5px);animation:fade .25s}
+.close{position:absolute;right:14px;top:12px;border:0;border-radius:50%;width:36px;height:36px;cursor:pointer;background:#f0e9e3;font-size:23px;color:#544b46}
+.avatar{height:100px;width:100px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#edd6c9;margin-bottom:22px}.avatar img{height:100%;width:100%;object-fit:cover;object-position:center 25%}.avatar .initials{font-size:36px;letter-spacing:-2px}
+dialog h2{font-size:27px;line-height:1.2;margin:0 0 10px}.tag{display:inline-block;background:#f4e4db;color:#9b5546;padding:6px 12px;border-radius:20px;font-size:13px;margin:0 0 22px}
+dl{margin:0}dt{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#8b7770;margin:17px 0 6px}dd{margin:0;font-size:16px;line-height:1.6;overflow-wrap:anywhere}a{color:#ac5144;text-decoration:none}a:hover{text-decoration:underline}
+@keyframes arrive{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}@keyframes popup{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes fade{from{opacity:0}to{opacity:1}}
+@media(max-width:560px){body{padding:12px 8px}.grid{grid-template-columns:1fr;gap:18px}.photo{height:230px}.info{padding:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style></head><body><main class="grid" id="cards" aria-label="Project authors"></main>
+<dialog id="details" aria-labelledby="author-name"><button class="close" aria-label="Close author details">&times;</button><div class="avatar" id="avatar"></div><h2 id="author-name"></h2><p class="tag">Project author</p><dl><dt>Roll number</dt><dd id="roll"></dd><dt>Department</dt><dd>Department of Earth Sciences</dd><dt>Institution</dt><dd>IIT Bombay</dd><div id="email-block"><dt>Email</dt><dd><a id="email"></a></dd></div></dl></dialog>
+<script>
+const authors=__AUTHORS_JSON__;
+const grid=document.getElementById('cards'), dialog=document.getElementById('details');
+function portrait(a){const el=document.createElement(a.photo?'img':'span');if(a.photo){el.src=a.photo;el.alt=a.name;}else{el.className='initials';el.textContent=a.initials;el.setAttribute('aria-label','Photo not yet supplied');}return el;}
+authors.forEach(a=>{
+ const card=document.createElement('button');card.className='card';card.type='button';card.setAttribute('aria-haspopup','dialog');card.setAttribute('aria-label','View details for '+a.name);
+ const photo=document.createElement('div');photo.className='photo';photo.append(portrait(a));
+ const badge=document.createElement('span');badge.className='badge';badge.textContent='MEET THE AUTHOR';photo.append(badge);
+ const info=document.createElement('div');info.className='info';const name=document.createElement('h2');name.textContent=a.name;const dept=document.createElement('p');dept.textContent='Department of Earth Sciences';
+ const action=document.createElement('div');action.className='action';action.innerHTML='<span>View profile</span><span class="arrow" aria-hidden="true">↗</span>';
+ info.append(name,dept,action);card.append(photo,info);grid.append(card);
+ card.addEventListener('click',()=>{document.getElementById('avatar').replaceChildren(portrait(a));document.getElementById('author-name').textContent=a.name;document.getElementById('roll').textContent=a.roll;document.getElementById('email-block').hidden=!a.email;const email=document.getElementById('email');email.textContent=a.email||'';email.href=a.email?'mailto:'+a.email:'';dialog.showModal();});
+});
+document.querySelector('.close').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('click',e=>{const r=dialog.getBoundingClientRect();if(e.target===dialog&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))dialog.close();});
+</script></body></html>
