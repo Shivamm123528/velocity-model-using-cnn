@@ -5,6 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 from lab import auth,store
+from lab.authors import render as render_authors
 from lab.segy import inspect_segy,load_segy,SHOT_FIELDS
 from lab.data import load_sample,pack,transform,numeric,DEFAULT_META
 from lab.generator import make_velocity_model
@@ -25,7 +26,7 @@ h1,h2,h3 {letter-spacing:-.025em}
 [data-testid="stMetricValue"] {color:#b8554b}
 </style>""",unsafe_allow_html=True)
 PAGES=["Home","Model Explorer","Seismic Acquisition","Velocity Prediction","Results and Error Analysis",
-       "Robustness Lab","FWI Comparison","Theory and Methodology","My Experiments","Profile and Settings"]
+       "Robustness Lab","FWI Comparison","Theory and Methodology","My Experiments","Profile and Settings","Authors"]
 if "_pending_nav" in st.session_state:
     st.session_state.nav=st.session_state.pop("_pending_nav")
 def goto(page):st.session_state["_pending_nav"]=page;st.rerun()
@@ -430,5 +431,7 @@ elif page=="Profile and Settings":
             st.caption("Email/password credentials are managed by Supabase Auth. Passwords are never stored in application tables.")
             if show_tips:st.info("Compare a velocity profile and the full error map before interpreting a single similarity score.")
         except Exception:st.error("Profile could not be loaded. Check migrations and your connection.")
+elif page=="Authors":
+    render_authors(ROOT)
 st.divider()
 st.caption("Seismic Velocity Modelling Lab · synthetic demonstration · source notebook + Yang & Ma (2019)")
