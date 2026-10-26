@@ -41,6 +41,16 @@ dialog h2{font-size:clamp(36px,5vw,76px);line-height:1.03;margin:0 0 20px;letter
 dt{color:#eac2af;font-size:12px;margin-top:22px}dd{font-size:clamp(17px,1.6vw,22px);color:#fff}
 a{color:#fff;text-decoration:underline;text-underline-offset:5px}.close{position:fixed;right:30px;top:30px;width:48px;height:48px;font-size:30px;z-index:5;color:#fff;background:#162635aa;border:1px solid #ffffff55;backdrop-filter:blur(10px)}
 @media(max-width:640px){.grid{grid-template-columns:1fr;gap:18px}.card{min-height:510px}.photo{height:100%}.info{padding:28px}.info h2{font-size:36px}.profile-copy{padding:90px 26px 40px;max-width:100%;justify-content:flex-end;min-height:100%}dialog h2{font-size:42px}dialog::after{background:linear-gradient(180deg,#101c2b05 0%,#101c2b77 30%,#101c2bf0 58%)}.avatar img{object-position:center top}.close{right:24px;top:24px}dd{font-size:18px}}
+
+/* Show the entire original portrait in the opened profile. */
+dialog[open]{display:grid;grid-template-columns:minmax(0,3fr) minmax(280px,2fr);grid-template-rows:minmax(0,1fr);overflow:hidden}
+dialog::after{display:none}
+dialog .avatar{position:relative;inset:auto;z-index:auto;width:100%;height:100%;min-height:0;overflow:hidden;background:#15232d;align-self:stretch}
+dialog .avatar img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transform:none}
+dialog .avatar .initials{justify-self:center;margin:0;font-size:clamp(80px,16vw,220px)}
+dialog .profile-copy{min-height:0;height:100%;max-width:none;padding:72px clamp(24px,3vw,48px) 40px;overflow-y:auto;display:block;background:linear-gradient(145deg,#263b49,#14222d)}
+dialog h2{font-size:clamp(30px,3.5vw,56px);overflow-wrap:anywhere}
+@media(max-width:700px){dialog[open]{grid-template-columns:minmax(0,1fr);grid-template-rows:55vh auto;overflow-y:auto}dialog .avatar{height:55vh;min-height:0}dialog .profile-copy{height:auto;overflow:visible;padding:30px 24px 40px}dialog h2{font-size:36px}}
 </style></head><body><main class="grid" id="cards" aria-label="Project authors"></main>
 <dialog id="details" aria-labelledby="author-name"><button class="close" aria-label="Close author details">&times;</button><div class="avatar" id="avatar"></div><div class="profile-copy"><h2 id="author-name"></h2><p class="tag">Project author</p><dl><dt>Roll number</dt><dd id="roll"></dd><dt>Department</dt><dd>Department of Earth Sciences</dd><dt>Institution</dt><dd>IIT Bombay</dd><div id="email-block"><dt>Email</dt><dd><a id="email"></a></dd></div></dl></div></dialog>
 <script>
