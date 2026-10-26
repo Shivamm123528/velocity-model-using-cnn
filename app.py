@@ -5,6 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 from lab import auth,store
+from lab.segy import inspect_segy,load_segy,SHOT_FIELDS
 from lab.data import load_sample,pack,transform,numeric,DEFAULT_META
 from lab.generator import make_velocity_model
 from lab.physics import simulate,wavelet
@@ -65,12 +66,34 @@ def select_input():
                     except Exception:st.error("Could not save bookmark.")
             else:st.info("No samples found. Run scripts/make_samples.py.")
         with up:
-            f=st.file_uploader("NPY or NPZ, maximum 12 MiB",type=["npy","npz"])
-            st.caption("NPZ keys: seismic (5,250,301), optional velocity (201,301), optional metadata JSON scalar.")
-            if f and st.button("Validate and load upload"):
+            f=st.file_uploader("NPY / NPZ (12 MiB), or SEG-Y (200 MiB)",type=["npy","npz","sgy","segy"])
+            st.caption("SEG-Y: pre-stack shot gathers. Stacked sections and arbitrary survey geometry cannot feed this checkpoint.")
+            if f and Path(f.name).suffix.lower() in [".sgy",".segy"]:
+                grouping=st.selectbox("Shot grouping header",list(SHOT_FIELDS))
+                endian=st.selectbox("SEG-Y byte order",["big","little"])
+                payload=f.getvalue()
                 try:
-                    d,v,m=load_sample(f.getvalue(),f.name);set_sample(d,v,m,f.name)
-                except Exception as e:st.error(f"Cannot load this file: {e}")
+                    info=inspect_segy(payload,SHOT_FIELDS[grouping],endian)
+                    st.write({k:v for k,v in info.items() if k!="shots"})
+                    st.dataframe(info["shots"],use_container_width=True)
+                    ids=[r["shot_id"] for r in info["shots"]]
+                    selected=st.multiselect("Select exactly five shot IDs (sorted by source X on loading)",ids,max_selections=5)
+                    st.warning("Experimental field-data use: matching headers does not establish reliable velocity predictions. No automatic resizing, resampling or amplitude normalization is applied.")
+                    confirmed=st.checkbox("These are unstacked shot gathers with a compatible 25 Hz source wavelet, surface geometry and calibrated raw amplitudes.")
+                    if st.button("Validate and load SEG-Y",disabled=len(selected)!=5 or not confirmed):
+                        d,v,m=load_segy(payload,selected,SHOT_FIELDS[grouping],endian)
+                        m["source_hz"]=25.
+                        m["source_frequency_verified"]="user confirmed"
+                        m["experimental_acknowledged"]=True
+                        set_sample(d,v,m,f.name)
+                except Exception as e:
+                    st.error(f"Cannot load SEG-Y: {e}")
+            else:
+                st.caption("NPZ keys: seismic (5,250,301), optional velocity (201,301), optional metadata JSON scalar.")
+                if f and st.button("Validate and load upload"):
+                    try:
+                        d,v,m=load_sample(f.getvalue(),f.name);set_sample(d,v,m,f.name)
+                    except Exception as e:st.error(f"Cannot load this file: {e}")
     if "sample" not in st.session_state:
         st.info("Load an example above to begin.");return None
     sample=st.session_state.sample
@@ -232,6 +255,8 @@ elif page=="Velocity Prediction":
     st.title("Velocity Prediction");inference_notice()
     s=select_input()
     if s:
+        if s["meta"].get("experimental"):
+            st.warning("Experimental SEG-Y prediction: this synthetic-trained checkpoint has not been validated on field data.")
         st.json(s["meta"],expanded=False)
         meta=dict(s["meta"])
         if "preprocessing" not in meta:
