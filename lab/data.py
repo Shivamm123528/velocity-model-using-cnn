@@ -50,3 +50,19 @@ def transform(d, noise=0., amplitude=1., cutoff=0., seed=0, mode="Hz"):
         else: f[:,np.fft.rfftfreq(out.shape[1],.004)<cutoff,:]=0
         out=np.fft.irfft(f,n=out.shape[1],axis=1).astype(np.float32)
     return out
+
+def load_research_sample(payload,name,expected):
+    """Load a revised NPZ against an explicit trusted acquisition contract."""
+    limit=64*1024**2
+    if len(payload)>limit:raise ValueError("Maximum revised upload size is 64 MiB.")
+    if not name.lower().endswith(".npz"):raise ValueError("Use an NPZ with acquisition metadata.")
+    with zipfile.ZipFile(io.BytesIO(payload)) as z:
+        if len(z.infolist())>8 or sum(x.file_size for x in z.infolist())>limit:
+            raise ValueError("Expanded upload exceeds the limit.")
+    with np.load(io.BytesIO(payload),allow_pickle=False) as z:
+        if "seismic" not in z or "metadata" not in z:raise ValueError("NPZ requires seismic and metadata.")
+        d=numeric(z["seismic"],tuple(expected["input_shape"]),"seismic")
+        v=numeric(z["velocity"],tuple(expected["model_shape"]),"velocity") if "velocity" in z else None
+        meta=json.loads(str(z["metadata"].item()))
+        if not isinstance(meta,dict):raise ValueError("metadata must be a JSON object.")
+    return d,v,meta
